@@ -1,5 +1,6 @@
 from django.test import TestCase
 from task.models import Task
+from task.forms import NewTaskForm
 
 class TaskModelTest(TestCase):
 
@@ -59,3 +60,25 @@ class DetailPageTest(TestCase):
         response = self.client.get('/tasks/12/')
         self.assertEqual(response.status_code, 404)
 
+class AddTaskFromTest(TestCase):
+
+    def setUp(self):
+        self.form = NewTaskForm
+
+    def test_new_page_returns_correct_response(self):
+        response = self.client.get(f'/tasks/add')
+
+        self.assertTemplateUsed(response, 'task/addTask.html')
+        self.assertEqual(response.status_code, 200)
+
+    def test_form_can_be_valid(self):
+        self.assertTrue(issubclass(self.form, NewTaskForm))
+        self.assertTrue('task' in self.form.Meta.fields)
+        self.assertTrue('description' in self.form.Meta.fields)
+
+        form = self.form({
+            'task': 'New title',
+            'description': 'New description'
+        })
+
+        self.assertTrue(form.is_valid())
