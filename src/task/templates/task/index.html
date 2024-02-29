@@ -1,0 +1,42 @@
+{% load task_tags %}
+{% comment %} or could be loaded like this 👇 {% endcomment %}
+{% load get_priority_color from task_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+</head>
+<body>
+    <h1>Tasks</h1>
+
+    <ul>
+        <li><b>By:</b> {{name}}</li>
+        <li><b>Designation:</b> {{designation|title}}</li>
+    </ul>
+
+    <hr/>
+
+    <table border=1>
+        <thead>
+            <th>Task</th>
+            <th>Desc</th>
+            <th>Priority</th>
+        </thead>
+        {% for task in tasks %}
+        <tr>
+            <td>
+                {{task.task}}
+            </td>
+            <td>
+                {{task.description}}
+            </td>
+            <td style="background-color: {{ task.priority|get_priority_color }};">
+                {{task.priority}}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

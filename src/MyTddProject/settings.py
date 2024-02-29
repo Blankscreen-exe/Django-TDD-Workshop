@@ -40,6 +40,7 @@ BASE_APPS = [
 
 CUSTOM_APPS = [
     'lists',
+    'task'
 ]
 
 THIRD_PARTY_APPS = [
