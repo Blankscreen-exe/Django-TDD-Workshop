@@ -6,9 +6,11 @@
     <title>Add Task</title>
 </head>
 <body>
-    <form method="POST">
+    <a href={% url 'task-home' %} > Back to Task home</a>
+    <form method="POST" action=".">
         {% csrf_token %}
-        {{form.as_p()}}
+        {{form.as_p}}
+        <input type="submit" value="Sumbit">
     </form>
 </body>
 </html>

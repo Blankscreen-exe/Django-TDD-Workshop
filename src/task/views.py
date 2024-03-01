@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import TemplateView, FormView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, FormView, CreateView
 from .models import Task
 from task.forms import NewTaskForm
 
@@ -39,17 +40,11 @@ class detail(TemplateView):
         return self.render_to_response(context)
 
 
-class addTask(FormView):
-    template_name = 'task/detail.html'
+class addTask(CreateView):
+    template_name = 'task/addTask.html'
     form_class = NewTaskForm
-    def get_context_data(self, id):
-        obj = get_object_or_404(Task, id=id)
-        return obj
+    success_url = reverse_lazy("task-home")
+    
+    def form_valid(self, form):
+        return super().form_valid(form)
 
-    def get(self, request, *args, **kwargs):
-
-        context = {
-            "task": self.get_context_data(kwargs['task_id'])
-        }
-
-        return self.render_to_response(context)

@@ -66,7 +66,7 @@ class AddTaskFromTest(TestCase):
         self.form = NewTaskForm
 
     def test_new_page_returns_correct_response(self):
-        response = self.client.get(f'/tasks/add')
+        response = self.client.get(f'/tasks/add/')
 
         self.assertTemplateUsed(response, 'task/addTask.html')
         self.assertEqual(response.status_code, 200)
@@ -78,7 +78,34 @@ class AddTaskFromTest(TestCase):
 
         form = self.form({
             'task': 'New title',
-            'description': 'New description'
+            'description': 'New description',
+            'priority': 2
         })
 
         self.assertTrue(form.is_valid())
+
+    def test_add_task_form_rendering(self):
+        response = self.client.get('/tasks/add/')
+
+        self.assertContains(response, '<form')
+        self.assertContains(response, 'csrfmiddlewaretoken')
+        self.assertContains(response, '<label for')
+
+        response = self.client.post('/tasks/add/', {
+            'task': '',
+            'description': 'new desc 11',
+            'priority': 1
+        })
+
+        self.assertContains(response, '<ul class=\"errorlist\">')
+        self.assertContains(response, 'This field is required')
+
+        # test valid forms
+        response = self.client.post('/tasks/add/', {
+            'task': 'new task 11',
+            'description': 'new desc 11',
+            'priority': 1
+        })
+
+        self.assertRedirects(response, expected_url='/tasks/')
+        self.assertEqual(Task.objects.count(), 1)
