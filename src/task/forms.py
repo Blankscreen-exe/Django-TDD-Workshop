@@ -6,4 +6,4 @@ class NewTaskForm(forms.ModelForm):
 
     class Meta:
         model = Task
-        fields = ('task', 'description',)
+        fields = ('task', 'description', 'priority')
