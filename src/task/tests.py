@@ -1,6 +1,6 @@
 from django.test import TestCase
 from task.models import Task
-from task.forms import NewTaskForm
+from task.forms import NewTaskForm, UpdateTaskForm
 
 class TaskModelTest(TestCase):
 
@@ -109,3 +109,74 @@ class AddTaskFromTest(TestCase):
 
         self.assertRedirects(response, expected_url='/tasks/')
         self.assertEqual(Task.objects.count(), 1)
+
+class UpdateTaskData(TestCase):
+
+    def setUp(self):
+        self.task = Task.objects.create(
+            task='task 1',
+            description="desc 1",
+            priority=2
+        )
+        self.form = UpdateTaskForm
+    
+    def test_update_page_returns_correct_response(self):
+        response = self.client.get(f'/tasks/update/{self.task.id}/')
+
+        self.assertTemplateUsed(response, 'task/updateTask.html')
+        self.assertEqual(response.status_code, 200)
+
+    def test_form_can_be_valid(self):
+        self.assertTrue(issubclass(self.form, UpdateTaskForm))
+        self.assertTrue('task' in self.form.Meta.fields)
+        self.assertTrue('description' in self.form.Meta.fields)
+        self.assertTrue('priority' in self.form.Meta.fields)
+
+        form = self.form({
+            'task': 'some title abc',
+            'description': 'some description abc',
+            'priority': 3
+        }, instance=self.task)
+
+        self.assertTrue(form.is_valid())
+
+        form.save()
+
+        self.assertEqual(self.task.task, 'some title abc')
+
+    def test_form_can_be_invalid(self):
+        form = self.form({
+            'task': '',
+            'description': 'some data',
+            'priority': 1
+        })
+
+        self.assertFalse(form.is_valid())
+
+    def test_add_task_form_rendering(self):
+        response = self.client.get(f'/tasks/update/{self.task.id}/')
+
+        self.assertContains(response, '<form')
+        self.assertContains(response, 'csrfmiddlewaretoken')
+        self.assertContains(response, '<label for')
+
+        response = self.client.post(f'/tasks/update/{self.task.id}/', {
+            'id': self.task.id,
+            'task': '',
+            'description': 'new desc 11',
+            'priority': 1
+        }, instance=self.task)
+
+        self.assertContains(response, '<ul class=\"errorlist\">')
+        self.assertContains(response, 'This field is required')
+
+        # test valid forms
+        response = self.client.post(f'/tasks/update/{self.task.id}/', {
+            'task': 'new task 11',
+            'description': 'new desc 11',
+            'priority': 1
+        })
+
+        self.assertRedirects(response, expected_url='/tasks/')
+        self.assertEqual(Task.objects.count(), 1)
+        self.assertEqual(Task.objects.first().task, 'new task 11')

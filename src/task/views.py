@@ -1,8 +1,9 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, FormView, CreateView
+from django.views.generic import TemplateView, FormView, CreateView, UpdateView
 from .models import Task
-from task.forms import NewTaskForm
+from task.forms import NewTaskForm, UpdateTaskForm
 
 class index(TemplateView):
     template_name = "task/index.html"
@@ -47,4 +48,13 @@ class addTask(CreateView):
     
     def form_valid(self, form):
         return super().form_valid(form)
+
+
+class updateTask(UpdateView):
+    model = Task
+    template_name = "task/updateTask.html"
+    form_class = UpdateTaskForm
+    success_url = reverse_lazy('task-home')
+
+    
 
