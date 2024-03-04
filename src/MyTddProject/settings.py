@@ -45,6 +45,9 @@ CUSTOM_APPS = [
 
 THIRD_PARTY_APPS = [
     'django_nose',
+    'tailwind',
+    'theme',
+    'django_browser_reload',
 ]
 
 INSTALLED_APPS = BASE_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
@@ -57,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'MyTddProject.urls'
@@ -64,7 +68,7 @@ ROOT_URLCONF = 'MyTddProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,6 +132,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -144,4 +151,10 @@ NOSE_ARGS = [
     '--cover-package=MyTddProject',
     '--with-xunit', # Add this and the following line
     '--xunit-file=xunittest.xml',  # xunittest.xml could be any name
+]
+
+# for tailwind package
+TAILWIND_APP_NAME = 'theme'
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
