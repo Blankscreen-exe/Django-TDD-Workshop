@@ -1,21 +1,24 @@
 {% extends 'base_form.html' %}
-{% block title %}Add Task{% endblock title %}
+{% block title %}Update Task{% endblock title %}
+
+
 
 {% block root %}
 
 <h1 class="text-2xl font-semibold text-slate-700">
-    Add Task
+    Update Task
 </h1>
+<h2 class="text-lg">ID: {{ object.id }}</h2>
 
 <div class="bg-slate-100 flex flex-col justify-center align-middle">
     <a href={% url 'task-home' %}>
          <button class="bg-orange-400 p-2 hover:bg-orange-300 transition-colors duration-3">back to Task home</button>
     </a>
 
-    <form method="post" action="." class="w-[50%] bg-slate-200 p-3 flex flex-col gap-4">
+    <form method="post" class="w-[50%] bg-slate-200 p-3 flex flex-col gap-4">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Submit" class="bg-orange-400 text-orange-50 p-2 hover:bg-orange-300 hover:text-slate-900 transition-colors duration-3">
+        <input type="submit" value="Update" class="bg-orange-400 text-orange-50 p-2 hover:bg-orange-300 hover:text-slate-900 transition-colors duration-3">
     </form>
 
 </div>
