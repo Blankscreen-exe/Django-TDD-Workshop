@@ -110,7 +110,7 @@ class AddTaskFromTest(TestCase):
         self.assertRedirects(response, expected_url='/tasks/')
         self.assertEqual(Task.objects.count(), 1)
 
-class UpdateTaskData(TestCase):
+class UpdateTaskTest(TestCase):
 
     def setUp(self):
         self.task = Task.objects.create(
@@ -180,3 +180,22 @@ class UpdateTaskData(TestCase):
         self.assertRedirects(response, expected_url='/tasks/')
         self.assertEqual(Task.objects.count(), 1)
         self.assertEqual(Task.objects.first().task, 'new task 11')
+
+class DeleteTaskTest(TestCase):
+
+    def setUp(self) -> None:
+        self.task = Task.objects.create(
+            task="task 1",
+            description="description 1",
+            priority=1
+        )
+    
+    def tearDown(self) -> None:
+        return super().tearDown()
+    
+    def test_delete_page_deletes_task(self):
+        self.assertEqual(Task.objects.count(), 1)
+
+        response = self.client.post(f'/tasks/delete/{self.task.id}/')
+        self.assertRedirects(response, expected_url='/tasks/')
+        self.assertEqual(Task.objects.count(), 0)

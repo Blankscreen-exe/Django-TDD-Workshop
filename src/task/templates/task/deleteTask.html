@@ -1,0 +1,54 @@
+{% extends 'base_form.html' %}
+{% load get_priority_star from task_tags %}
+
+{% block title %}Delete Task{% endblock title %}
+
+{% block root %}
+
+<h1 class="text-2xl font-semibold text-slate-700">
+    Delete Task
+</h1>
+
+<div class="bg-slate-100 flex flex-col justify-center align-middle">
+    <a href={% url 'task-home' %}>
+         <button class="bg-orange-400 p-2 hover:bg-orange-300 transition-colors duration-3">back to Task home</button>
+    </a>
+
+    <form method="post" action="." class="w-[50%] bg-slate-200 p-3 flex flex-col gap-4">
+        {% csrf_token %}
+        <p class="text-xl text-slate-800">Are you sure YOU want to delete this task?</p>
+        <p class="p-2">
+            <span class="font-bold text-orange-800">
+                Task:
+            </span> {{ object.task }}</p>
+        <p class="p-2">
+            <span class="font-bold text-orange-800">
+                Description:
+            </span> {{ object.description }}</p>
+        <p class="p-2">
+            <span class="font-bold text-orange-800">
+                Priority:
+            </span> {{ object.priority|get_priority_star }}</p>
+
+        <input type="submit" value="Confirm" class="bg-orange-400 text-orange-50 p-2 hover:bg-orange-300 hover:text-slate-900 transition-colors duration-3">
+    </form>
+
+</div>
+
+{% endblock root %}
+
+
+{% block extrajs %}
+
+$(document).ready( () => {
+
+    // $('#id_task').addClass('w-full rounded border px-2 py-1');
+    // $('#id_description').addClass('w-full rounded border px-2 py-1');
+    // $('#id_priority').addClass('w-full rounded border px-2 py-1');
+
+    // $('label').addClass('text-slate-500');
+
+});
+
+
+{% endblock extrajs %}

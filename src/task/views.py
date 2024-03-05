@@ -1,7 +1,7 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, FormView, CreateView, UpdateView
+from django.views.generic import TemplateView, FormView, CreateView, UpdateView, DeleteView
 from .models import Task
 from task.forms import NewTaskForm, UpdateTaskForm
 
@@ -56,5 +56,9 @@ class updateTask(UpdateView):
     form_class = UpdateTaskForm
     success_url = reverse_lazy('task-home')
 
+class deleteTask(DeleteView):
+    model = Task
+    template_name = "task/deleteTask.html"
+    success_url = reverse_lazy('task-home')
     
 

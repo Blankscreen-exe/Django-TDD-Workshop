@@ -12,13 +12,20 @@ def get_priority_color(value):
     This filter takes a priority level and returns a corresponding background color.
     """
     colors = {
-        1: '#f4a4a4',  # Most urgent
+        1: '#ff7171',  # Most urgent
         2: '#ffe8d6',
-        3: '#fbddff',
+        3: '#b7b7b7',
         # ... (add more levels with colors)
         # Default fallback color (optional)
         'default': 'lightgray'  # Least urgent
     }
     return colors.get(value, 'default')
 
-register.filter('get_priority_color', get_priority_color)
+@register.filter(name="get_priority_star")
+def get_priority_star(value):
+    total_priorities=3
+    start_count = total_priorities-value+1
+    return start_count*"★" + ("(max)" if start_count==3 else "")
+
+# you can also register filters like this 👇
+# register.filter('get_priority_color', get_priority_color)
